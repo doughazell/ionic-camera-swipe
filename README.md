@@ -220,7 +220,7 @@ Additions to Ionic example
 ### Clone GitHub repo
 Cloning 'ionic-camera-swipe' should be all that's necessary
 ```
-  root@ubuntu-cordova:~# git clone XXX
+  root@ubuntu-cordova:~# git clone https://github.com/doughazell/ionic-camera-swipe.git
 
   root@ubuntu-cordova:~/ionic-camera-swipe# ionic cordova build android
   root@ubuntu-cordova:~/ionic-camera-swipe# cp platforms/android/app/build/outputs/apk/debug/app-debug.apk /Desktop/.
