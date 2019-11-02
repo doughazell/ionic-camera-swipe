@@ -24,6 +24,7 @@ This repo enhances https://ionicframework.com/docs/angular/your-first-app with t
 [Ionic DevApp](#devapp)
 
 <a name="intro"/>
+
 ### Intro
 Ionic is a wrapper around the Cordova build system and Angular Javascript engine + UI features, in order to create hybrid mobile phone apps (as a one-liner appropriate for this repo).
 
@@ -36,6 +37,7 @@ If you are completely new to Ionic then save & open in a browser the single html
 * https://ionicframework.com/docs/installation/cdn#ionic-framework-cdn
 
 <a name="android"/>
+
 ### Android dev on MacOS
 Now onto getting on the Ionic app development for Android on MacOS (it's almost like deliberate competitor sabotage).
 You need to install Java to use the Android SDK so it's natural to install the latest version of something...big mistake...!
@@ -112,6 +114,7 @@ In a separate terminal window commit the state of the Docker container to an ima
 * Transfer APK to Android from MacOS Desktop via USB Android File Transfer and install it.
 
 <a name="vnc"/>
+
 ### VNC + Visual Studio Code IDE
 I initially used XServer on MacOS to display Visual Stuidio Code but found that VNC was a clearer image.
 
@@ -171,6 +174,7 @@ Visual Studio Code:
                     ~# code --user-data-dir=/root
 ```
 <a name="adb"/>
+
 ### ADB on MacOS
 ```
   $ brew cask install android-platform-tools
@@ -188,6 +192,7 @@ Visual Studio Code:
   * $ adb logcat|grep chromium
 
 <a name="commands"/>
+
 ### Commands necessary in creating repo
 ```
   MacOS $ docker run -it -p 5901:5901 -v ~/Desktop:/Desktop ubuntu-cordova bash
@@ -232,6 +237,7 @@ Additions to Ionic example
                     ~/photo-gallery# npm install @ionic-native/photo-viewer
 ```
 <a name="clone"/>
+
 ### Clone GitHub repo
 Cloning 'ionic-camera-swipe' should be all that's necessary
 ```
@@ -243,6 +249,7 @@ Cloning 'ionic-camera-swipe' should be all that's necessary
 Transfer APK to Android from MacOS Desktop via USB Android File Transfer and install it.
 
 <a name="emulator"/>
+
 ### Android Emulator
 https://developer.android.com/studio/command-line/avdmanager
 
@@ -251,6 +258,7 @@ https://developer.android.com/studio/run/emulator-acceleration
   You must run a VM-accelerated emulator directly on your host computer."
 
 <a name="devapp"/>
+
 ### Ionic DevApp
 I haven't found a way to use DevApp on Android from Ionic running in a Docker container since it's on a different subnet to the WiFi 
 (and hence the IP address of the phone doesn't respond to the broadcasts from 'ionic serve --devapp').
