@@ -28,11 +28,12 @@ If you are completely new to Ionic then save & open in a browser the single html
 ### Android dev on MacOS
 Now onto getting on the Ionic app development for Android on MacOS (it's almost like deliberate competitor sabotage).
 You need to install Java to use the Android SDK so it's natural to install the latest version of something...big mistake...!
-You need Java 8 for Android SDK but if you install the latest version of Java on MacOS then you can't get rid of it...ffs...
-so you have to use Docker.
+You need Java 8 for Android SDK but if you install the latest version of Java on MacOS then you can't get rid of it...ffs...so you have to use Docker.
 * https://docs.docker.com/docker-for-mac/install/
 * Install Ubuntu Linux in a Docker container
+```
     $ docker run -it ubuntu bash
+```
 * Install Cordova (on that Docker Ubuntu image)
 ```
   root@container-id:~# apt update
@@ -119,7 +120,7 @@ XServer on MacOS:
     access control disabled, clients can connect from any host
 
   $ docker run -it -e DISPLAY=$IP:0 ubuntu-cordova bash
-``
+```
 VNC:
 ```
   root@container-id:/# apt-get install xfce4 xfce4-goodies
