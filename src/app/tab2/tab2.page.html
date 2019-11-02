@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Nice work, good job!
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+<!-- <img [src]="currentImage" *ngIf="currentImage"> -->
+
+<ion-grid>
+  <ion-row>
+    
+    <ion-col size="6" *ngFor="let photo of photoService.photos; let i = index;" >
+    <!-- <ion-col size=colNum *ngFor="let photo of photoService.photos; let i = index;" > -->
+      <ion-item-sliding>
+        <!-- <ion-item (click)="deleteItem(i)"> -->
+        <ion-item (click)="expandItem(i)">
+          <img [src]="photo.data" />
+        </ion-item>
+
+        <ion-item-options side="end" (ionSwipe)="deleteItem(i)">
+          <ion-item-option color="danger" (click)="deleteItem(i)" expandable>
+            <ion-icon name="close"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+
+        <!--
+        <ion-item-options side="start" *ngIf="i % 2 === 1" (ionSwipe)="deleteItem(i)">
+          <ion-item-option color="danger" (click)="deleteItem(i)" expandable>
+            <ion-icon name="close"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        -->
+
+      </ion-item-sliding>
+
+      <!-- <ion-label> {{ i }} </ion-label> -->
+
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<!--
+<ion-content>
+  <ion-refresher slot="fixed" 
+  (ionRefresh)="ionRefresh($event)" 
+  (ionPull)="ionPull($event)" 
+  (ionStart)="ionStart($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+</ion-content>
+-->
+
+<!-- 8/10/19 DH: FAB = Floating Action Button -->
+<ion-fab vertical="bottom" horizontal="center" slot="fixed">
+    <ion-fab-button (click)="takePicture()">
+    <!-- <ion-fab-button (click)="photoService.takePicture()"> -->
+      <ion-icon name="camera"></ion-icon>
+    </ion-fab-button>
+</ion-fab>
+
+
+</ion-content>

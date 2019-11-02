@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>image</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  
+  <ion-label> {{ photoService.index }} </ion-label>  
+  <ion-item>
+    <img [src]="photoService.photos[photoService.index].data" />  
+  </ion-item>
+
+</ion-content>
