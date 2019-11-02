@@ -149,7 +149,7 @@ Visual Studio Code:
   root@container-id:~# code --user-data-dir=/root
     Xlib:  extension "RANDR" missing on display ":1.0".
 ```
-* <enter Victor Meldrew stage right> https://github.com/microsoft/vscode/issues/3451#issuecomment-227197582
+* [enter Victor Meldrew stage right] https://github.com/microsoft/vscode/issues/3451#issuecomment-227197582
 ```
   root@container-id:/# cd /usr/share/code/
                     /usr/share/code# cp /usr/lib/x86_64-linux-gnu/libxcb.so.1 .
