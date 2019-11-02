@@ -13,15 +13,15 @@ This repo enhances https://ionicframework.com/docs/angular/your-first-app with t
 * Ionic UI components:
   * ToastController
 
-##### Table of Contents  
-[Intro](#intro)
-[Android dev on MacOS](#android)
-[VNC + Visual Studio Code IDE](#vnc)
-[ADB on MacOS](#adb)
-[Commands necessary in creating repo](#commands)
-[Clone GitHub repo](#clone)
-[Android Emulator](#emulator)
-[Ionic DevApp](#devapp)
+##### Table of Contents
+[Intro](#intro)  
+[Android dev on MacOS](#android)  
+[VNC + Visual Studio Code IDE](#vnc)  
+[ADB on MacOS](#adb)  
+[Commands necessary in creating repo](#commands)  
+[Clone GitHub repo](#clone)  
+[Android Emulator](#emulator)  
+[Ionic DevApp](#devapp)  
 
 <a name="intro"/>
 
