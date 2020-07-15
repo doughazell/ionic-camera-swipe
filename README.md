@@ -239,12 +239,12 @@ Additions to Ionic example
 <a name="clone"/>
 
 ### Clone GitHub repo
-Cloning 'ionic-camera-swipe' should be all that's necessary
+[DETAILS OF STEPS NECESSARY FOR A FRESH LINUX SYSTEM IN PROGRESS]
 ```
   root@container-id:~# git clone https://github.com/doughazell/ionic-camera-swipe.git
 
-  ON A FRESH SYSTEM YOU MAY NEED (since the other node modules are local to the repo):
-  root@container-id:~# npm install -g ionic cordova
+  ON A FRESH SYSTEM YOU WILL NEED TO SET UP IONIC/CORDOVA FOR ANDROID SDK (since the other node modules are local to the repo):
+  [SUBSET OF ABOVE]
 
   root@container-id:~/ionic-camera-swipe# ionic cordova build android
   root@container-id:~/ionic-camera-swipe# cp platforms/android/app/build/outputs/apk/debug/app-debug.apk /Desktop/.
