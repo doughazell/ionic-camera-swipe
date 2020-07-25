@@ -268,3 +268,5 @@ I haven't found a way to use DevApp on Android from Ionic running in a Docker co
 
 Install the APK via USB Android File Transfer (or Google Drive mapped to Desktop on MacOS) or 'ionic serve' on VNC to test Ionic web features.
 
+Update: https://ionicframework.com/docs/appflow/devapp
+
