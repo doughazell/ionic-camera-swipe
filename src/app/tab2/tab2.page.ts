@@ -59,7 +59,7 @@ export class Tab2Page {
   async presentToast() {
     const toast = await this.toastController.create({
       position: 'middle',
-      message: 'Loading previous images from SQLite...',
+      message: 'Loaded images previously with PhotoService',
       duration: 2000
     });
     toast.present();
