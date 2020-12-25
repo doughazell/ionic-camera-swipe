@@ -7,6 +7,9 @@ import { Events } from '@ionic/angular';
 // 17/10/19 DH:
 import { LogService } from '../services/log.service'
 
+// 24/11/20 DH: Like pre-loading images for Tab2, I'm attempting to pre-load the gsheet data
+const { startSheets, getRows, rows } = require('../../assets/gsheet');
+
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
@@ -37,8 +40,10 @@ export class TabsPage {
     this.photoService.loadSaved(this);
     console.log("Called 'photoService.loadSaved()' callback in TabsPage");
 
-    // 17/10/19 DH: Msg not passed since this is parent class of Tab3 display list...!
     this.logService.log("TabsPage called photoService.loadSaved()");
+
+    // 24/11/20 DH: pre-load the gsheet data
+    startSheets();
   }
 
   ngAfterViewInit() {

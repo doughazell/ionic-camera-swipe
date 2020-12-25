@@ -34,6 +34,7 @@
     "cordova-plugin-camera": "^4.1.0",
     "cordova-sqlite-storage": "^3.4.1",
     "core-js": "^2.6.11",
+    "googleapis": "^39.2.0",
     "rxjs": "^6.6.3",
     "tslib": "^1.14.1",
     "zone.js": "~0.9.1"
@@ -51,7 +52,7 @@
     "@ionic/angular-toolkit": "~2.0.0",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "^2.0.8",
-    "@types/node": "~8.9.4",
+    "@types/node": "^8.9.5",
     "codelyzer": "^5.2.2",
     "cordova-plugin-device": "^2.0.3",
     "cordova-plugin-ionic-keyboard": "^2.2.0",

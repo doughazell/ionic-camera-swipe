@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>Ionic App 2</title>
+  <title>Ionic App 3c</title>
 
   <base href="/" />
 
@@ -18,6 +18,16 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
   <script src="cordova.js"></script>
+
+  <!-- 16/11/20 DH: readable-stream "global is not defined" (even though already in 'polyfills.ts'...!) -->
+  <!--              readable-stream "process is not defined" -->
+  <script>
+    var global = global || window;
+    var process = process || {
+      env: { DEBUG: undefined },
+      version: []
+    };
+  </script>
 </head>
 
 <body>

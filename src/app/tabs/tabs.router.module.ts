@@ -5,6 +5,12 @@ import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
   {
+    path: '',
+    redirectTo: '/tabs/tab1',
+    pathMatch: 'full'
+  },
+  
+  {
     path: 'tabs',
     component: TabsPage,
     children: [
@@ -38,24 +44,29 @@ const routes: Routes = [
           }
         ]
       },
+      // 10/11/20 DH: Adding in access to Google sheets
+      // ---------------------------------------------------------------------
+      // 28/11/20 DH: Cascading tabs in Angular for Google sheets
+
       {
-        path: '',
-        redirectTo: '/tabs/tab1',
-        pathMatch: 'full'
-      }
+        path: 'tab4google',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../tab4google/tab4google.module').then(m => m.Tab4GooglePageModule)
+          }
+        ]
+      },
+ 
     ]
   },
-  {
-    path: '',
-    redirectTo: '/tabs/tab1',
-    pathMatch: 'full'
-  }
+ 
 ];
 
 @NgModule({
   imports: [
     RouterModule.forChild(routes),
-    //RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules } ) 
   ],
   exports: [RouterModule]
 })

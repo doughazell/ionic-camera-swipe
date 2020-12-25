@@ -11,13 +11,54 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "es2015",
+    // 15/11/20 DH: "ES6/ES2015 is a huge leap forward from ES5. It adds a tremendous amount of functionality to JavaScript."
+    //"target": "es5",
     "typeRoots": [
       "node_modules/@types"
     ],
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+
+    // 15/11/20 DH: Angular 6 CLI not use Node built-ins for Browser support
+    "paths": {
+      "crypto": [
+        "node_modules/crypto-browserify"
+      ],
+      "path": [
+        "node_modules/path-browserify"
+      ],
+      "stream": [
+        "node_modules/stream-browserify"
+      ],
+      "os": [
+        "node_modules/os-browserify"
+      ],
+      "https": [
+        "node_modules/https-browserify"
+      ],
+      "fs": [
+        "node_modules/builtins"
+      ],
+      "child_process": [
+        "node_modules/builtins"
+      ],
+      "readline": [
+        "node_modules/builtins"
+      ],
+      "net": [
+        "node_modules/builtins"
+      ],
+      "tls": [
+        "node_modules/builtins"
+      ],
+      "http": [
+        "node_modules/builtins"
+      ],
+
+    },
+
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

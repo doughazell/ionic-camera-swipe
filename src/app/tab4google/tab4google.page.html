@@ -1,0 +1,34 @@
+
+<ion-tabs>
+
+  <!-- <ion-tab-bar slot="top"> -->
+  <ion-tab-bar>
+    <!-- ion-icon name: https://ionicons.com/ , https://ionicons.com/v4/ -->
+    
+    <!-- 1/12/20 DH: Notice nested 'tab4google' path: -->
+    <ion-tab-button tab="tab4google/tab4google/tab4" (click)="clickTab4()">
+
+      <!-- Ionic 5: <ion-icon name="library"></ion-icon> -->
+      <ion-icon name="compass"></ion-icon>
+      <ion-label>Addresses</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="tab4google/tab4google/tab4b" (click)="clickTab4b()">
+    
+      <ion-icon name="refresh-circle"></ion-icon>
+      <ion-label>Deleted</ion-label>
+    </ion-tab-button>
+
+  </ion-tab-bar>
+
+</ion-tabs>
+
+<!-- 12/12/20 DH: Trying https://angular.io/guide/component-interaction#parent-interacts-with-child-via-local-variable 
+(since https://angular.io/guide/component-interaction#parent-calls-an-viewchild not working with Angular 8)
+
+<app-countdown-timer #timer></app-countdown-timer>
+-->
+
+<!-- ...nope didn't work...prob an Angular 8 DOM Component issue
+<app-tab4b #tab4b></app-tab4b>
+-->

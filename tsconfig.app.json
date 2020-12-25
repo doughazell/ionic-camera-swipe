@@ -2,7 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": []
+    // 15/11/20 DH: Enabling 'require' in 'tab3.page.ts' to use 'src/assets/gsheet.js'
+    "types": [
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts"

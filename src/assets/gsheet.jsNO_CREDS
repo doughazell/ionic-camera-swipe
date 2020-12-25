@@ -1,0 +1,386 @@
+const fs = require('fs');
+const readline = require('readline');
+ 
+const {google} = require('googleapis');
+
+// If modifying these scopes, delete token.json.
+//const SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly'];
+const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
+
+// --------------------------------------------------------------------------------
+const CREDS_JSON = 'copy of credentials.json';
+const TOKEN = 'copy of token.json';
+
+// --------------------------------------------------------------------------------
+
+// 21/11/20 DH: Exporting data from gsheet
+let rows = 'Initial value';
+let flagSet = false;
+// 11/12/20 DH:
+let deletedrows = 'Initial value';
+// 24/11/20 DH: Working on updating the sheet
+let sheets = 'initial';
+let oAuth2Client = 'initial';
+
+// 15/12/20 DH: Code adaption to make sheet row transfer bi-directional
+let sheetIDs = [
+  { name: 'Personal', id: '0', firstrow: 2 },
+  { name: 'Deleted', id: '596308217', firstrow: 1 },
+];
+
+// 24/11/20 DH: Attempting to callback Tab4Page.displaySheetData()
+//import { Tab4Page } from '../app/tab4/tab4.page';
+
+// 14/11/20 DH:
+// ===========================================================================
+//startSheets();
+
+function getRows() {
+  console.log('gsheet.getRows(), setting flagSet = false');
+  // 25/11/20 DH: Firstly get fresh data from google sheet
+  // 22/12/20 DH: but 'getAddresses()' doesn't block so prev 'rows' content returned...!
+  flagSet = false;
+  getAddresses();
+  //return rows;
+}
+
+function returnRows() {
+  return rows;
+}
+
+function flagNotSet() {
+  return ! flagSet; 
+}
+
+// 11/12/20 DH: 
+function getDeletedRows() {
+  console.log('gsheet.getDeletedRows(), setting flagSet = false');
+  // 23/12/20 DH:
+  flagSet = false;
+  getDeletedAddresses();
+  //return deletedrows;
+}
+
+function returnDeletedRows() {
+  return deletedrows;
+}
+
+// -------------------------------------------------------------------------------------
+// 15/12/20 DH: Prevent data race by synchronizing DB access steps with callbacks:
+//              'copyAndDelRow()'
+//                             -> 'appendAndDelRow()'
+//                                                 ->'deleteRow()'
+// -------------------------------------------------------------------------------------
+// 15/12/20 DH: Make bi-directional then need: 
+//              From sheet name, To sheet name (From sheet ID via ,
+async function copyAndDelRow(fromSheetName, index, toSheetName) {
+  // 17/12/20 DH:
+  //let sheetId = (sheetIDs.find(obj => obj.name === sheetName) ).id;
+  //  { name: 'Personal', id: '0', firstrow: 2 },
+  let firstrow = (sheetIDs.find(obj => obj.name === fromSheetName) ).firstrow;
+
+  // 24/11/20 DH: Unary plus operator '+' converts string to number
+  //let rowIdx = ((+index) + 2);
+  let rowIdx = ((+index) + firstrow);
+
+  //console.log(`copyRow() Personal!A${rowIdx}:H${rowIdx}`);
+  console.log(`gsheet.copyAndDelRow() ${fromSheetName}!A${rowIdx}:H${rowIdx}`);
+
+  sheets.spreadsheets.values.get({
+   
+    // 11/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    //range: 'Personal!A1:H',
+    //range: 'Personal!A2:H2',
+    //range: `Personal!A${rowIdx}:H${rowIdx}`,
+    range: `${fromSheetName}!A${rowIdx}:H${rowIdx}`,
+
+  }, async (err, res) => {
+    // 'googleapis/build/src/apis/sheets/v4.d.ts' line 5791:
+    //    "sheets.spreadsheets.values.get(request, function(err, response) {});"
+    // 'googleapis/build/src/apis/sheets/v4.ts' line 117:
+    //    "get(paramsOrCallback, optionsOrCallback, callback) { ... }"
+    //
+    // --------------- CALLBACK TO sheets.spreadsheets.values.get() --------------
+    if (err) return console.log('The API returned an error: ' + err);
+  
+    let row = res.data.values;
+    console.log('sheets.spreadsheets.values.get() returned: '+row);
+
+    // 26/11/20 DH: === Append to 'Deleted' sheet (for rollback if necessary) ===
+    // 28/11/20 DH: ...refactored...
+    appendAndDelRow(fromSheetName, index, toSheetName, row);
+
+  }  // END: callback arg to 'sheets.spreadsheets.values.get()'
+  ); // END: 'sheets.spreadsheets.values.get()'
+
+}
+
+// 28/11/20 DH: Refactor of callback chain
+async function appendAndDelRow(fromSheetName, index, toSheetName, row) {
+
+  const request = {
+    // 24/11/20 DH: Accessing 'Addresses:Deleted' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    // 15/12/20 DH:
+    //range: 'Deleted!A1',
+    range: `${toSheetName}!A1`,
+
+    valueInputOption: 'USER_ENTERED',
+    insertDataOption: 'INSERT_ROWS',
+    resource: {
+      majorDimension: "ROWS",
+      values: row,
+    },
+    auth: oAuth2Client,
+  };
+
+  try {
+    console.log('await sheets.spreadsheets.values.append()...dum, dee, dum...');
+    const response = (await sheets.spreadsheets.values.append(request)).data;
+    console.log('sheets.spreadsheets.values.append() returned: ');
+    console.log(JSON.stringify(response, null, 2));
+
+    // 27/11/20 DH: Call 'deleteRow(index)' here to avoid unresolved Promise issues in 'Tab4Page.deleteItem()'...!
+    deleteRow(fromSheetName, index);
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function deleteRow(sheetName, index) {
+  // 17/12/20 DH:
+  let firstrow = (sheetIDs.find(obj => obj.name === sheetName) ).firstrow;
+
+  // 24/11/20 DH: Unary plus operator '+' converts string to number
+  // 18/12/20 DH: +1 from when deleting row in Personal sheet (ie before bi-directional)
+  //let rowIdx = ((+index) + 1);
+  let rowIdx = ((+index) + firstrow -1);
+  
+  let rowIdxEnd = rowIdx + 1;
+  console.log('gsheet.deleteRow() index start: '+ rowIdx + ', end: '+ rowIdxEnd );
+  
+  // "===" 	"equal value and equal type"
+  // "==" "equal to"
+  let sheetId = (sheetIDs.find(obj => obj.name === sheetName) ).id;
+
+  console.log('gsheet.deleteRow(): sheetId: '+sheetId);
+
+  const request = {
+    // 24/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+
+    // 25/11/20 DH: Needed for 'clear()'
+    //range: 'Personal!A1:H',
+    //range: 'Personal!A2:H2', // Deletes just A2-H2 cell entries, but leaves blank entries
+
+    resource: {
+      // "The request body must be empty for 'sheets.spreadsheets.values.clear(request)' "
+      
+      "requests": [
+        {
+          "deleteDimension": {
+            "range": {
+
+              // 15/12/20 DH:
+              //"sheetId": 0, // Personal = 0, Deleted = 596308217
+              "sheetId": sheetId,
+
+              "dimension": "ROWS",
+              "startIndex": rowIdx,
+              "endIndex": rowIdxEnd
+            }
+          }
+        },
+      ],
+    
+    },
+
+    auth: oAuth2Client,
+  };
+
+  try {
+    //const response = (await sheets.spreadsheets.values.clear(request)).data;
+    const response = (await sheets.spreadsheets.batchUpdate(request)).data;
+    console.log('sheets.spreadsheets.batchUpdate(deleteDimension) returned: ');
+    console.log(JSON.stringify(response, null, 2));
+  } catch (err) {
+    console.error(err);
+  }
+
+}
+// ========================== END: copyAndDelRow() cascade =============================
+
+
+  // 26/11/20 DH: === Copy into 'Deleted' sheet (at same row) ===
+/* ---------------------------------------------------------------------------------
+  const request = {
+    // 24/11/20 DH: Accessing 'Addresses:Deleted' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    range: `Deleted!A${rowIdx}:H${rowIdx}`,
+    valueInputOption: 'USER_ENTERED',
+    resource: {
+      values: row,
+    },
+    auth: oAuth2Client,
+  };
+
+  try {
+    const response = (await sheets.spreadsheets.values.update(request)).data;
+    
+    console.log(JSON.stringify(response, null, 2));
+  } catch (err) {
+    console.error(err);
+  }
+   ---------------------------------------------------------------------------------
+*/  
+
+
+// -------------------------------------------------------------------------------------
+// 15/12/20 DH: Causes data race when used separately to associated callback functions
+//   (unlike 'copyAndDelRow()'
+//                          -> 'appendAndDelRow()'
+//                                              ->'deleteRow()' )
+//
+async function getRow(index) {
+  // 24/11/20 DH: Unary plus operator '+' converts string to number
+  let rowIdx = ((+index) + 2);
+
+  console.log(`gsheet.getRow(): Personal!A${rowIdx}:H${rowIdx}`);
+
+  sheets.spreadsheets.values.get({
+   
+      // 11/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
+      spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+      //range: 'Personal!A1:H',
+      //range: 'Personal!A2:H2',
+      range: `Personal!A${rowIdx}:H${rowIdx}`,
+
+  // 27/11/20 DH: "get({req block}, {callback with (err, res) args})", for when resp rec'd...so Promise...
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+  
+    let row = res.data.values;
+    console.log('gsheet.getRow(): '+row);
+    return row;
+  });
+
+}
+// -------------------------------------------------------------------------------------
+
+// =================================== AUTH + INITIAL VALUES =====================================
+
+function startSheets() {
+  console.log('gsheet.startSheets()');
+  
+  authorize(JSON.parse(CREDS_JSON), getInitialValues);
+  console.log('gsheet.startSheets(): return from authorize()');
+}
+
+/**
+ * Create an OAuth2 client with the given credentials, and then execute the
+ * given callback function.
+ * @param {Object} credentials The authorization client credentials.
+ * @param {function} callback The callback to call with the authorized client.
+ */
+function authorize(credentials, callback) {
+  const {client_secret, client_id, redirect_uris} = credentials.installed;
+ 
+  // 24/11/20 DH: Using global 'oAuth2Client'
+  oAuth2Client = new google.auth.OAuth2(
+        client_id, client_secret, redirect_uris[0]);
+    
+  // 17/11/20 DH: Need to have previously run via '$ node gsheet.js' in order to get TOKEN str above
+  oAuth2Client.setCredentials(JSON.parse(TOKEN));
+
+  // 25/11/20 DH: Assigning sheets here doesn't work due to time necessary to login, hence need calllback
+  //sheets = google.sheets({version: 'v4', oAuth2Client});
+  
+  console.log('gsheet.authorize() calling callback with OAuth2+TOKEN');
+  callback(oAuth2Client);
+}
+
+/**
+ * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
+ */
+function getInitialValues(auth) {
+  // 25/11/20 DH: Need to assign sheets here in callback to account for time needed for login
+  sheets = google.sheets({version: 'v4', auth});
+
+  getAddresses();
+}
+
+function getAddresses(){
+  sheets.spreadsheets.values.get({
+   
+    // 11/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    range: 'Personal!A1:H',
+
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+  
+    rows = res.data.values;
+
+    console.log('gsheet.getAddresses() rows: '+ rows.length);
+
+    if (rows.length) {
+/*
+      rows.map((row) => {
+        //console.log(`${row[2]}, ${row[3]}, ${row[4]}, ${row[5]}`);
+        console.log(`${row}`);
+      });
+*/
+      
+    } else {
+      console.log('No data found.');
+    }
+
+    // 22/12/20 DH: Creating blocking mode for Angular IO
+    flagSet = true;
+
+  });
+}
+
+function getDeletedAddresses(){
+  sheets.spreadsheets.values.get({
+   
+    // 11/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
+    //spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    //range: 'Personal!A1:H',
+
+    // 11/12/20 DH: Accessing 'Addresses:Deleted' from 'freehazell@gmail.com'
+    spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
+    range: 'Deleted!A1:H',
+
+  }, (err, res) => {
+    if (err) return console.log('The API returned an error: ' + err);
+  
+    deletedrows = res.data.values;
+
+    if (deletedrows) {
+      // nop
+    } else {
+      console.log('gsheet.getDeletedAddresses(): No data found.');
+    }
+
+    // 24/12/20 DH: Creating blocking mode for Angular IO
+    flagSet = true;
+    
+  });
+}
+
+// 17/11/20 DH: Accessed from calling .ts by: "const { startSheetsNoPify } = require('../../assets/gsheet');"
+module.exports = {
+  startSheets,
+  getRows,
+  rows,
+  deleteRow,
+  copyAndDelRow,
+  getRow,
+  getDeletedRows,
+  returnRows,
+  flagNotSet,
+  returnDeletedRows,
+};
