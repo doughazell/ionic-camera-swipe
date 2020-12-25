@@ -2,6 +2,8 @@
 It took me a lot of Victor Meldrew moments ("I don't believe it!") to get myself on the Ionic/Android dev ladder
 with a MacBook Pro, so hopefully this will help at least 1 person to have a, "hey, that's really cool..." Ionic moment.
 
+[Edit: Or cut out Cordova on MacOS and just use [Capacitor](https://github.com/doughazell/ionic-camera-swipe/commit/b0dafa7e43043e9a5eff594b76ff0a4db9164432#commitcomment-43838006)]
+
 This repo enhances https://ionicframework.com/docs/angular/your-first-app with the following:
 * Smartphone logging service to a tab (rather than the console accessed via 'adb' on Android)
 * Swipe mechanism to delete images and messages
