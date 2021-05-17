@@ -76,3 +76,4 @@ import * as buffer from 'buffer';
 // 16/11/20 DH: Added to solve 'TypeError: process.version.split is not a function'
 import * as process from 'process';
 (window as any).process = process;
+

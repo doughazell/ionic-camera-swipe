@@ -7,7 +7,7 @@ import { ErrorHandler } from '@angular/core';
 import { Injectable } from '@angular/core';
 
 // 11/12/20 DH: Similar to 'TabsPage.ngOnInit()' calling 'startSheets()'
-const { getDeletedRows } = require('../../assets/gsheet');
+//const { getDeletedRows } = require('../../assets/gsheet');
 
 // 12/12/20 DH: Now a service
 import { Tab4bPage } from '../tab4b/tab4b.page';

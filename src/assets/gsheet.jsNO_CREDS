@@ -1,4 +1,7 @@
 const fs = require('fs');
+// Solving 'pify(fs.readFile)' Browser console error (prev done by removing line in 'gtoken')
+fs.readFile = {};
+
 const readline = require('readline');
  
 const {google} = require('googleapis');
@@ -10,7 +13,6 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 // --------------------------------------------------------------------------------
 const CREDS_JSON = 'copy of credentials.json';
 const TOKEN = 'copy of token.json';
-
 // --------------------------------------------------------------------------------
 
 // 21/11/20 DH: Exporting data from gsheet
@@ -72,7 +74,7 @@ function returnDeletedRows() {
 //                                                 ->'deleteRow()'
 // -------------------------------------------------------------------------------------
 // 15/12/20 DH: Make bi-directional then need: 
-//              From sheet name, To sheet name (From sheet ID via ,
+//              From sheet name, To sheet name (from sheet ID via predefined global)
 async function copyAndDelRow(fromSheetName, index, toSheetName) {
   // 17/12/20 DH:
   //let sheetId = (sheetIDs.find(obj => obj.name === sheetName) ).id;
@@ -98,7 +100,7 @@ async function copyAndDelRow(fromSheetName, index, toSheetName) {
   }, async (err, res) => {
     // 'googleapis/build/src/apis/sheets/v4.d.ts' line 5791:
     //    "sheets.spreadsheets.values.get(request, function(err, response) {});"
-    // 'googleapis/build/src/apis/sheets/v4.ts' line 117:
+    // 'googleapis/build/src/apis/sheets/v4.js' line 117:
     //    "get(paramsOrCallback, optionsOrCallback, callback) { ... }"
     //
     // --------------- CALLBACK TO sheets.spreadsheets.values.get() --------------

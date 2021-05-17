@@ -65,32 +65,8 @@ export class Tab4bPage {
     //this.displaySheetData();
   }
 
-  // 14/12/20 DH: https://ionicframework.com/docs/angular/lifecycle 
-  //                                 vs 
-  //              https://angular.io/guide/lifecycle-hooks
-  // (that couldn't be achieved in 'refreshItems()' with: ChangeDetectorRef, ApplicationRef, NgZone)
-  ionViewWillEnter() {
-    console.log('Tab4bPage.ionViewWillEnter() calling displaySheetData()');
-    this.displaySheetData();
-  }
-
-  itemSelected(item: string, index: number) {
-    console.log("Selected Item (", index, "): ", item);
-    this.displaySheetData();
-  }
-
-  displaySheetData(){
-    // 25/11/20 DH: Firstly clear the entire list
-    this.items.splice(0,this.items.length);
-
-    // 24/12/20 DH:
-    getDeletedRows();
-
-    this.waitCounter = 0;
-    this.waitForFlag();
-
 /* --------------------------------------------------------------------------------
-    // 13/12/20 DH: Attempt to get ion-list to update on tab click
+    // 13/12/20 DH: Attempt to get ion-list to update on tab click (before 'ionViewWillEnter()' + 'waitForFlag()' solved the prob)
     //    Causes: "NullInjectorError: StaticInjectorError(AppModule)[IonLabel -> ChangeDetectorRef]"
     //this.changeDetectorRef.detectChanges();
 
@@ -114,7 +90,30 @@ export class Tab4bPage {
     });
    --------------------------------------------------------------------------------
 */
-    
+
+  // 14/12/20 DH: https://ionicframework.com/docs/angular/lifecycle 
+  //                                 vs 
+  //              https://angular.io/guide/lifecycle-hooks
+  // (that couldn't be achieved in 'displaySheetData()' with: ChangeDetectorRef, ApplicationRef, NgZone)
+  ionViewWillEnter() {
+    console.log('Tab4bPage.ionViewWillEnter() calling displaySheetData()');
+    this.displaySheetData();
+  }
+
+  itemSelected(item: string, index: number) {
+    console.log("Selected Item (", index, "): ", item);
+    this.displaySheetData();
+  }
+
+  displaySheetData(){
+    // 25/11/20 DH: Firstly clear the entire list
+    this.items.splice(0,this.items.length);
+
+    // 24/12/20 DH:
+    getDeletedRows();
+
+    this.waitCounter = 0;
+    this.waitForFlag();
   }
 
   // 24/12/20 DH:

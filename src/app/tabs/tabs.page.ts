@@ -41,9 +41,9 @@ export class TabsPage {
     console.log("Called 'photoService.loadSaved()' callback in TabsPage");
 
     this.logService.log("TabsPage called photoService.loadSaved()");
-
+ 
     // 24/11/20 DH: pre-load the gsheet data
-    startSheets();
+    startSheets();    
   }
 
   ngAfterViewInit() {
