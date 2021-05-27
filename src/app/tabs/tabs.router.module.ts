@@ -21,6 +21,15 @@ const routes: Routes = [
             path: '',
             loadChildren: () =>
               import('../tab1/tab1.module').then(m => m.Tab1PageModule)
+          },
+          // 20/5/21 DH: Adding google auth error to tab1 (from auto generated add to 'app-routing.module.ts')
+          {
+            path: 'google-error/:error/:msg',
+            // Browser console error: "Error: Cannot find module '../tab1/google-error/google-error.module' "
+            //loadChildren: '../tab1/google-error/google-error.module#GoogleErrorPageModule'
+
+            loadChildren: () =>
+              import('../tab1/google-error/google-error.module').then(m => m.GoogleErrorPageModule)
           }
         ]
       },

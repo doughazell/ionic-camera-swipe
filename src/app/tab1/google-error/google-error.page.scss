@@ -1,0 +1,29 @@
+.welcome-card img {
+  // 26/11/20 DH: Causes image to be compressed vertically without 'width: auto;'
+  max-height: 40vh;
+  //width: auto;
+  width: 50%;
+
+  // 26/11/20 DH: Centralise the image
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+
+  overflow: hidden;
+}
+.welcome-card p { 
+  text-align: center;
+}
+
+ion-item h2 {
+  font-weight: 500 !important;
+}
+
+ion-item h3 {
+  color: #777;
+}
+
+ion-item {
+  --padding-end: 20px;
+}
+

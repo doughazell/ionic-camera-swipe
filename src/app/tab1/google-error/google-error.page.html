@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      Google auth error
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- -->
+  <ion-card class="welcome-card">
+      
+    <ion-card-header>
+      <ion-card-title>Welcome to Google auth error...</ion-card-title>
+    </ion-card-header>
+    <img src="/assets/balavil-sunset.jpg" alt="" />
+    <ion-card-content >
+      <p>Nice work, good job...!</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-item>
+    <ion-label class="ion-text-center"><h2>{{ error }}:</h2></ion-label>
+    <ion-label><h3>{{ msg }}</h3></ion-label>
+  </ion-item>
+
+  <ion-list lines="none">
+    <ion-title color="primary">
+      Details
+    </ion-title>
+
+    <ion-item>
+      <p *ngIf="error == 'GoogleJSONError'">
+        Your google auth string was not JSON
+      </p>
+      <p *ngIf="error == 'GoogleAuthError' ; else elseBlock">
+        Your google auth string was invalid 
+        <br><br>
+        <a href="https://www.oauth.com/oauth2-servers/access-tokens/access-token-response/">Access token response</a>
+        <br>
+        <a href="https://restfulapi.net/http-status-codes/">HTTP status codes</a>
+      </p>
+      <ng-template #elseBlock>
+        some other error
+      </ng-template>
+    </ion-item>
+
+    <ion-item href="https://developers.google.com/sheets/api/quickstart/nodejs">
+      <ion-icon slot="start" color="medium" name="book"></ion-icon>
+      <ion-label>Get Google authorization creds + token</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>

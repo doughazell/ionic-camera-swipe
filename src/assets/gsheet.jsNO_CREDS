@@ -24,6 +24,10 @@ let deletedrows = 'Initial value';
 let sheets = 'initial';
 let oAuth2Client = 'initial';
 
+// 25/5/21 DH: Storing googleapis method err in callback
+let googleapisErr = 'initial';
+let googleapisErrSet = false;
+
 // 15/12/20 DH: Code adaption to make sheet row transfer bi-directional
 let sheetIDs = [
   { name: 'Personal', id: '0', firstrow: 2 },
@@ -43,6 +47,7 @@ function getRows() {
   // 22/12/20 DH: but 'getAddresses()' doesn't block so prev 'rows' content returned...!
   flagSet = false;
   getAddresses();
+
   //return rows;
 }
 
@@ -65,6 +70,15 @@ function getDeletedRows() {
 
 function returnDeletedRows() {
   return deletedrows;
+}
+
+// 25/5/21 DH: Accessing googleapis callback error from Angular class
+function errorNotSet() {
+  return ! googleapisErrSet;
+}
+
+function getGoogleapisErr() {
+  return googleapisErr;
 }
 
 // -------------------------------------------------------------------------------------
@@ -276,6 +290,25 @@ async function getRow(index) {
 function startSheets() {
   console.log('gsheet.startSheets()');
   
+  // 18/5/21 DH: Providing feedback on default value authorize error
+  try {
+    JSON.parse(CREDS_JSON);
+    JSON.parse(TOKEN);
+  } catch (e) {
+    console.log(e);
+    console.log('CREDS_JSON: '+CREDS_JSON);
+    console.log('TOKEN: '+TOKEN);
+    throw {name : "GoogleJSONError", message : "CREDS_JSON/TOKEN not JSON"}; 
+  }
+
+  /* -- Not get caught here since already passed here before error thrown in authorize --
+  try {
+    authorize(JSON.parse(CREDS_JSON), getInitialValues);
+    console.log('gsheet.startSheets(): return from authorize()');
+  } catch (e) {
+    throw {name: "GoogleAuthError", message: "CREDS_JSON/TOKEN invalid"};
+  }
+  */
   authorize(JSON.parse(CREDS_JSON), getInitialValues);
   console.log('gsheet.startSheets(): return from authorize()');
 }
@@ -301,6 +334,32 @@ function authorize(credentials, callback) {
   
   console.log('gsheet.authorize() calling callback with OAuth2+TOKEN');
   callback(oAuth2Client);
+
+  // 25/5/21 DH: No diff with using callback so not sure why it was used by google docs...?
+  //             (maybe just to demo callback arg)
+  //console.log('gsheet.authorize() calling getInitialValues with OAuth2+TOKEN');
+  //getInitialValues(oAuth2Client);
+
+  // 25/5/21 DH: Waiting here means that error not caught in TabsPage.ngOnInit() 
+  //             (in order to route to error page)
+  //waitForFlag();
+}
+
+function waitForFlag(){
+  if ( flagNotSet() && !googleapisErrSet) {
+    console.log('gsheet.waitForFlag() flagNotSet');
+    setTimeout(() => { 
+      waitForFlag();
+    }, 300); // arg 2 = msecs
+  } else {
+    console.log('gsheet.waitForFlag() flagSet');
+    if(googleapisErrSet) {
+      console.log('Throwing googleapisErr');
+      throw googleapisErr;
+    } else {
+      console.log('googleapisErr not set');
+    }
+  }
 }
 
 /**
@@ -310,21 +369,38 @@ function getInitialValues(auth) {
   // 25/11/20 DH: Need to assign sheets here in callback to account for time needed for login
   sheets = google.sheets({version: 'v4', auth});
 
-  getAddresses();
+  try {
+    // 24/5/21 DH: If 'async' declared by 'function getAddresses()' then need 'catch' on func call
+    //getAddresses().catch(err => console.log(`Caught by .catch ${err}`));
+    getAddresses();
+  } catch (e){
+    console.log('getInitialValues(): '+ e);
+  }
+  
 }
 
 function getAddresses(){
+
   sheets.spreadsheets.values.get({
-   
     // 11/11/20 DH: Accessing 'Addresses:Personal' from 'freehazell@gmail.com'
     spreadsheetId: '11tdSmNDpvY1ATQLZvHXmJ2yi_44a94EwzUmTUUkRg1s',
     range: 'Personal!A1:H',
-
   }, (err, res) => {
-    if (err) return console.log('The API returned an error: ' + err);
-  
-    rows = res.data.values;
+    if (err) { 
+      console.log('The API returned an error: ' + err);
+      
+      // 24/5/21 DH: Adding in google auth error feedback
+      
+      // 25/5/21 DH: Throwing from googleapis@39 callback in Angular 8 not get propagated back here
+      //throw {name : "GoogleAuthError", message : "err.data"}; 
 
+      // 25/5/21 DH: Store err locally in callback (like 'res.data.values')
+      googleapisErr = err;
+      googleapisErrSet = true;
+      return;
+    }
+
+    rows = res.data.values;
     console.log('gsheet.getAddresses() rows: '+ rows.length);
 
     if (rows.length) {
@@ -334,15 +410,17 @@ function getAddresses(){
         console.log(`${row}`);
       });
 */
-      
     } else {
       console.log('No data found.');
     }
-
     // 22/12/20 DH: Creating blocking mode for Angular IO
     flagSet = true;
 
-  });
+  } );  //.then((e) => {throw e} ); // Failed attempt to propagate 'get()' callback throw to 'gsheet.js'
+  // https://javascript.info/promise-error-handling - 
+  // "there’s an "implicit try..catch" around the function code. So all synchronous errors are handled.
+  // But here the error is generated not while the executor is running, but later. So the promise can’t handle it."
+
 }
 
 function getDeletedAddresses(){
@@ -385,4 +463,6 @@ module.exports = {
   returnRows,
   flagNotSet,
   returnDeletedRows,
+  errorNotSet,
+  getGoogleapisErr,
 };

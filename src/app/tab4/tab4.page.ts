@@ -49,6 +49,7 @@ export class Tab4Page {
 
     // 22/12/20 DH: 'getRows()' is non-blocking due to IO in 'getAddresses()'
     //let updatedrows = getRows();
+    console.log('Tab4Page.displaySheetData() calling getRows()...');
     getRows();
     
     this.waitForFlag();

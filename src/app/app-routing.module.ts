@@ -11,6 +11,8 @@ const routes: Routes = [
     path: 'image', 
     loadChildren: './tab2/image/image.module#ImagePageModule' 
   },
+  // 20/5/21 DH: Auto added by 'ionic generate page tab1/google-error' (moved to tabs.router.module.ts)
+  // { path: 'google-error', loadChildren: './tab1/google-error/google-error.module#GoogleErrorPageModule' },
 
 
 ];
