@@ -55,6 +55,7 @@ export class TabsPage {
       console.log(e.message);
       //'Tab1Page.templateUrl = 'tab1NODDY.page.html';' not able to alter dynamically, need new page..
       this.router.navigate(['/tabs/tab1/google-error', e.name, e.message]);
+      return;
     }
     
     this.waitForFlag();
