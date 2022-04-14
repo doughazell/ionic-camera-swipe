@@ -1,0 +1,42 @@
+#! /bin/bash
+
+echo
+echo "nice work, good job"
+echo
+
+#for VAR in HOME SHELL PATH TERM LOGNAME USER "${!HOMEBREW_@}"
+FILES="
+  CameraLauncher.java
+  CordovaUri.java
+  FileProvider.java
+"
+DIR="../android/capacitor-cordova-android-plugins/src/main/java/org/apache/cordova/camera"
+
+echo "--- Plugin 1 ---"
+for FILE in ${FILES}
+do
+#    FILTERED_ENV+=( "${VAR}=${!VAR}" )
+  echo "cp ${FILE} to ${DIR}"
+  cp ${FILE} ${DIR}
+done
+
+# =====================================================================
+# 8/4/22 DH: Update for changed Java files that needs to be refactored
+# =====================================================================
+
+FILES="
+  PhotoViewer.java
+  PhotoActivity.java
+"
+DIR="../android/capacitor-cordova-android-plugins/src/main/java/com/sarriaroman/PhotoViewer"
+
+echo
+echo "--- Plugin 2 ---"
+for FILE in ${FILES}
+do
+  echo "cp ${FILE} to ${DIR}"
+  cp ${FILE} ${DIR}
+done
+
+echo "----------------"
+
