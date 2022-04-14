@@ -3,6 +3,9 @@ import { Component } from '@angular/core';
 // 17/10/19 DH:
 import { LogService } from '../services/log.service'
 
+// 3/2/22 DH:
+import { SpeechService } from '../services/speech.service';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -10,19 +13,21 @@ import { LogService } from '../services/log.service'
 })
 export class Tab3Page {
   items = [
-    'Nice work, good job!',
-    'Hey, sweeet.'
+    'Tab3 default item: Nice work, good job!',
+    'Tab3 default item: Hey, sweeet.'
   ];
 
-  constructor(public logService: LogService) {
+  constructor(public logService: LogService, private speechService: SpeechService) {
     this.logService.setTab3Page(this);
   }
 
+  
   ngOnInit() {
-    console.log("Yup we're off the ground...again");
-
-    this.logService.log("Tab3Page init'd.");
+    //console.log("Yup we're off the ground...again");
+    //this.logService.log("Tab3Page init'd.");
+    this.logService.flushBuffer();
   }
+  
 
   itemSelected(item: string, index: number) {
     console.log("Selected Item (", index, "): ", item);
@@ -37,6 +42,12 @@ export class Tab3Page {
   displayMsg(item: string) {
     //this.items.push(item);
     this.items.unshift(item);
+  }
+
+  recordSpeech(){
+    //this.logService.log('Recording speech');
+    this.speechService.recordSpeech();
+    //this.logService.log('Finished recording');
   }
 
 }

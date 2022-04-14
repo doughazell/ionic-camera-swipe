@@ -16,6 +16,9 @@ import { IonicStorageModule } from '@ionic/storage';
 // 20/10/19 DH:
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
+// 30/1/22 DH: Attempting to add speech recognition (prior to Reinforcement Learning from cmd)
+import { SpeechRecognition } from '@awesome-cordova-plugins/speech-recognition/ngx';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -27,6 +30,10 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
     SplashScreen,
     Camera,
     PhotoViewer,
+
+    // 31/1/22
+    SpeechRecognition,
+
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
     // {provide: ErrorHandler, useClass: IonicErrorHandler}
   ],

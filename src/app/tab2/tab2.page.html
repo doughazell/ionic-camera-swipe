@@ -17,8 +17,8 @@
     <!-- <ion-col size=colNum *ngFor="let photo of photoService.photos; let i = index;" > -->
       <ion-item-sliding>
         <!-- <ion-item (click)="deleteItem(i)"> -->
-        <ion-item (click)="expandItem(i)">
-          <img [src]="photo.data" />
+        <ion-item (click)="expandItem(i, $event)">
+          <img [src]="photo.data" id="img{{i}}" />
         </ion-item>
 
         <ion-item-options side="end" (ionSwipe)="deleteItem(i)">

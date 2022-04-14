@@ -58,7 +58,7 @@ export class Tab4Page {
   waitForFlag(){
     if ( flagNotSet() ) {
       console.log('waitForFlag() flagNotSet');
-      setTimeout(() => { 
+      setTimeout( () => { 
         this.waitForFlag();
       }, 300); // arg 2 = msecs
     } else {

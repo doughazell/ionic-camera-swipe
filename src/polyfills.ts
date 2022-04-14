@@ -70,8 +70,8 @@ import * as buffer from 'buffer';
 (window as any).Buffer = buffer;
 
 // 16/11/20 DH: Added to solve 'ReferenceError: global is not defined'
- //              Add global to window, assigning the value of window itself.
- (window as any).global = window;
+//              Add global to window, assigning the value of window itself.
+(window as any).global = window;
 
 // 16/11/20 DH: Added to solve 'TypeError: process.version.split is not a function'
 import * as process from 'process';

@@ -14,6 +14,12 @@ import { Router } from '@angular/router';
 // 20/10/19 DH:
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
+// 8/4/22 DH:
+import { LogService } from '../services/log.service';
+
+// 14/4/22 DH:
+import { SpeechService } from '../services/speech.service';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -23,9 +29,11 @@ export class Tab2Page {
   currentImage: any;
   // 19/10/19 DH: Dynamically increasing size of image when clicked
   colNum = "6";
+  static SPEECH_CODE: number = 69;
 
   constructor(public photoService: PhotoService, public toastController: ToastController, 
-              public events: Events, private router: Router, private photoViewer: PhotoViewer) {  }
+              public events: Events, private router: Router, private photoViewer: PhotoViewer,
+              public logService: LogService, private speechService: SpeechService) {  }
   
 /*
 */
@@ -82,15 +90,46 @@ export class Tab2Page {
 
   }
 
-  expandItem(index: number) {
+  expandItem(index: number, event) {
     console.log("Item ", index, " clicked for expansion");
+
+    this.photoService.logService.log("Item: " + index + " id: " + event.target.id);
+    let imgClicked = document.getElementById(event.target.id);
+    this.photoService.getImgOrientation(imgClicked);
 
     //this.router.navigate(['/image', index]);
 
     //this.photoService.index = index;
     //this.router.navigate(['/image']);
     
-    this.photoViewer.show(this.photoService.photos[index].data);
+    console.log("PhotoViewerDH: calling show()");
+    //this.photoViewer.show(this.photoService.photos[index].data, 'Nice work, good job', {share: true} );
+
+    /* */
+    try {    
+      this.photoViewer.show(this.photoService.photos[index].data, 'Nice work, good job', {share: true} ).then(
+        (result) => {
+          console.log("PhotoViewerDH: show() ok: " + result);
+          this.logService.log("Tab2Page: PhotoViewer returned");
+          if (result == Tab2Page.SPEECH_CODE) {
+            this.speechService.recordSpeech();
+          }
+        },
+        (err) => {
+          // Handle error
+          console.log("PhotoViewerDH: errorCallback: " + err);
+        }
+      ).catch((reason) => {
+        console.log("PhotoViewerDH: " + reason);
+      }).finally(() => {
+        console.log("PhotoViewerDH: show() Promise final answer");
+      });
+    } catch (error) {
+      console.log("PhotoViewerDH: show() did not return a Promise...bitch..." + error);
+    }
+
+    console.log("PhotoViewerDH: returned from show()");
+    this.photoService.getImgData(imgClicked);
   }
 
   /*
