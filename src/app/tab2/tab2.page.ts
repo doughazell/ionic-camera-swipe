@@ -105,14 +105,18 @@ export class Tab2Page {
     console.log("PhotoViewerDH: calling show()");
     //this.photoViewer.show(this.photoService.photos[index].data, 'Nice work, good job', {share: true} );
 
-    /* */
-    try {    
+    /* 'try-catch' around 'then-catch-finally' */
+    try {
+      // 24/5/22 DH: PhotoService.photos.push({data: 'data:image/jpeg;base64,' + imageData});
       this.photoViewer.show(this.photoService.photos[index].data, 'Nice work, good job', {share: true} ).then(
         (result) => {
           console.log("PhotoViewerDH: show() ok: " + result);
           this.logService.log("Tab2Page: PhotoViewer returned");
           if (result == Tab2Page.SPEECH_CODE) {
             this.speechService.recordSpeech();
+
+            // 23/5/22 DH: Also call Cloud Vision API (https://cloud.google.com/vision/) POST with 'features' body
+            //             https://medium.com/enappd/how-to-implement-google-vision-in-ionic-4-b61aee655bea
           }
         },
         (err) => {

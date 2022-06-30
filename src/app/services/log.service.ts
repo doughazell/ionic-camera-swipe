@@ -48,4 +48,14 @@ export class LogService {
 
   }
 
+  // 30/4/22 DH:
+  clearLog(){
+    this.tab3.clearLog();
+  }
+
+  // 1/5/22 DH:
+  clickTab3(){
+    document.getElementById("tab-button-tab3").click();
+  }
+
 }

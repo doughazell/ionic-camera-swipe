@@ -107,7 +107,4 @@ export class Tab4Page {
     //this.items.unshift(item);
   }
 
-  
-
-  
 }

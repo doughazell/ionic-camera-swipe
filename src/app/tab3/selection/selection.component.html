@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar>
+    
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>Selection confirmation</h1>
+  <p> Action: {{action}} </p>
+  <p> Objects: {{objects}}</p>
+  <p>
+    <ion-list>
+
+      <ion-item>
+        <ion-label>Protocol</ion-label>
+        <ion-select placeholder="Select One" [(ngModel)]="protocol">
+          <ion-select-option *ngFor="let protocol of protocolList;" [value]="protocol">
+            {{protocol}}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+  </p>
+  <p>Do you want to add it to Google Kit sheet?
+    <ion-button (click)="sendToGoogleKitSheet()">
+      <!-- We are still using Ionic v4.11.13 -->
+      <ion-icon name="clipboard"></ion-icon>
+      <ion-label>Use selection</ion-label>
+    </ion-button>
+  </p>
+
+  <p>Do you want to "href=url" to add image to sheet?
+    <ion-button href="https://script.google.com/macros/s/AKfycbw527Wo_KkHKugGphS8ahtSP0sKrgDweaVnn0WX9oQOGqXWQEmH00H3TJQ5yur_0Q-Y7Q/exec">
+      <!-- We are still using Ionic v4.11.13 -->
+      <ion-icon name="image"></ion-icon>
+      <ion-label>Add image</ion-label>
+    </ion-button>
+  </p>
+
+  <p>Do you want to add image to sheet via doGet() httpclient / axios.post() ?
+    <ion-button (click)="sendImageToGoogleKitSheet()">
+      <!-- We are still using Ionic v4.11.13 -->
+      <ion-icon name="image"></ion-icon>
+      <ion-label>Add image</ion-label>
+    </ion-button>
+  </p>
+
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of items; let i = index;">
+      <ion-item >
+        <ion-label> {{ item }} </ion-label>   
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>  
+</ion-content>

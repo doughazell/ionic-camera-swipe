@@ -19,11 +19,16 @@ import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 // 30/1/22 DH: Attempting to add speech recognition (prior to Reinforcement Learning from cmd)
 import { SpeechRecognition } from '@awesome-cordova-plugins/speech-recognition/ngx';
 
+// 15/5/22 DH:
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
-    IonicStorageModule.forRoot()
+    IonicStorageModule.forRoot(),
+    // 15/5/22 DH:
+    HttpClientModule,
   ],
   providers: [
     StatusBar,
@@ -33,6 +38,9 @@ import { SpeechRecognition } from '@awesome-cordova-plugins/speech-recognition/n
 
     // 31/1/22
     SpeechRecognition,
+
+    // 15/5/22 DH:
+    HttpClientModule,
 
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
     // {provide: ErrorHandler, useClass: IonicErrorHandler}
