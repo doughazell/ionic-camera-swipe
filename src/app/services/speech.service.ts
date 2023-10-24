@@ -134,6 +134,8 @@ export class SpeechService {
     //this.logService.log("Number of parts: "+retStr.length);
 
     // === List of returned probable recognised matches for sentence ===
+    // 19/8/22 DH: 'speechRecognition.startListening()' returns 'matches: string[]'
+    //              (with each index string ONLY SEPARATED by COMMA when printed out)
     retStr.forEach((part) => {
       //this.logService.log(part);
 
